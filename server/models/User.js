@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema(
 		role: {
 			type: String,
 			enum: ["admin", "teacher", "student", "staff", "parent"],
-			default: "student",
+			default: "teacher",
 		},
 		// Linked parent or guardian to their child or children
 		children: [
