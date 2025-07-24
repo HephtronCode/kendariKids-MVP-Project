@@ -1,3 +1,5 @@
+# .github/workflows/ci.yml
+
 name: KendariKids CI
 
 on:
@@ -14,46 +16,34 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Setup pnpm
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
 
-      # Setup Node.js v18 (without cache: pnpm!)
       - name: Setup Node.js v18
         uses: actions/setup-node@v4
         with:
           node-version: "18"
+          # We use the pnpm cache globally
+          cache: "pnpm"
 
-      # --- SERVER CACHE & CHECKS ---
-      - name: Cache Server pnpm modules
-        uses: actions/cache@v3
-        with:
-          path: ./server/node_modules
-          key: ${{ runner.os }}-pnpm-server-${{ hashFiles('server/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-server-
+      # --- SERVER CHECKS ---
 
+      # THE FIX: Add the '--frozen-lockfile' flag to ensure devDependencies are installed.
+      # This is the standard, reliable command for CI environments.
       - name: Install Server Dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
         working-directory: ./server
 
       - name: Run Server Lint Check
         run: pnpm run lint
         working-directory: ./server
 
-      # --- CLIENT CACHE & CHECKS ---
-      - name: Cache Client pnpm modules
-        uses: actions/cache@v3
-        with:
-          path: ./client/node_modules
-          key: ${{ runner.os }}-pnpm-client-${{ hashFiles('client/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-client-
+      # --- CLIENT CHECKS ---
 
       - name: Install Client Dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
         working-directory: ./client
 
       - name: Run Client Lint Check
