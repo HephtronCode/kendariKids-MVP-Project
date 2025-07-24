@@ -16,23 +16,33 @@ const getToken = (id, role) => {
 // @route POST /api/auth/register
 // @access Public
 export const registerUser = async (req, res) => {
-	const { fullName, email, password, role, children } = req.body; // Added children for parent registration
+	// The key is that `role` and `children` are destructured here
+	const { fullName, email, password, role, children } = req.body;
+
+	// Basic validation
+	if (!fullName || !email || !password) {
+		return res
+			.status(400)
+			.json({ message: "Please enter all required fields" });
+	}
 
 	try {
 		const userExists = await User.findOne({ email });
-
 		if (userExists) {
 			return res
 				.status(400)
 				.json({ message: "User with this email already exists" });
 		}
 
+		// Create a new user with the provided data
 		const user = await User.create({
 			fullName,
 			email,
 			password,
-			role,
-			children, // This will be undefined for non-parents, which is fine
+			// If a role is provided in the body, it will be used.
+			// If not, the User schema's default ('student') will be used.
+			role: role || "student",
+			children,
 		});
 
 		if (user) {
@@ -41,13 +51,13 @@ export const registerUser = async (req, res) => {
 				fullName: user.fullName,
 				email: user.email,
 				role: user.role,
-				token: getToken(user._id, user.role),
+				token: generateToken(user._id, user.role),
 			});
 		} else {
 			res.status(400).json({ message: "Invalid user data provided" });
 		}
 	} catch (error) {
-		console.error(error);
+		console.error("Registration error:", error);
 		res.status(500).json({ message: "Server error during registration" });
 	}
 };

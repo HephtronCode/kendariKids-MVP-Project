@@ -1,0 +1,50 @@
+# .github/workflows/ci.yml
+
+# Name of our GitHub Action
+name: KendariKids CI
+
+# Controls when the action will run
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js v18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      # --- SERVER CHECKS ---
+      
+      # Corrected Step: This is a single, complete step.
+      - name: Install Server Dependencies
+        run: npm install
+        working-directory: ./server
+
+      - name: Run Server Lint Check
+        run: npm run lint
+        working-directory: ./server
+          
+      # --- CLIENT CHECKS ---
+      
+      - name: Install Client Dependencies
+        run: npm install
+        working-directory: ./client
+        
+      - name: Run Client Lint Check
+        run: npm run lint
+        working-directory: ./client
+          
+      - name: Build Client for Production
+        run: npm run build
+        working-directory: ./client
