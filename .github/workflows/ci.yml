@@ -21,17 +21,31 @@ jobs:
         with:
           version: 8
 
+      # We set up Node.js, but REMOVE the global cache setting.
+      # We will handle caching for each sub-project manually.
       - name: Setup Node.js v18
         uses: actions/setup-node@v4
         with:
           node-version: "18"
-          # We use the pnpm cache globally
-          cache: "pnpm"
 
-      # --- SERVER CHECKS ---
+      # --- SERVER CACHE & CHECKS ---
+      
+      # Step 1 for Server: Define a unique cache for the server's node_modules.
+      - name: Get Server pnpm cache directory
+        id: pnpm-cache-server
+        shell: bash
+        run: |
+          echo "dir=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+      
+      - name: Cache Server pnpm modules
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache-server.outputs.dir }}
+          key: ${{ runner.os }}-pnpm-server-store-${{ hashFiles('server/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-server-store-
 
-      # THE FIX: Add the '--frozen-lockfile' flag to ensure devDependencies are installed.
-      # This is the standard, reliable command for CI environments.
+      # Step 2 for Server: Install dependencies using the lock file.
       - name: Install Server Dependencies
         run: pnpm install --frozen-lockfile
         working-directory: ./server
@@ -40,8 +54,24 @@ jobs:
         run: pnpm run lint
         working-directory: ./server
 
-      # --- CLIENT CHECKS ---
+      # --- CLIENT CACHE & CHECKS ---
 
+      # Step 1 for Client: Define a unique cache for the client's node_modules.
+      - name: Get Client pnpm cache directory
+        id: pnpm-cache-client
+        shell: bash
+        run: |
+          echo "dir=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+      
+      - name: Cache Client pnpm modules
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache-client.outputs.dir }}
+          key: ${{ runner.os }}-pnpm-client-store-${{ hashFiles('client/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-client-store-
+
+      # Step 2 for Client: Install dependencies.
       - name: Install Client Dependencies
         run: pnpm install --frozen-lockfile
         working-directory: ./client
