@@ -1,9 +1,11 @@
 import { Routes, Route, Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth, useDashboardPath } from "@/hooks/useAuth";
 
-// Layouts & Pages
+// Layouts and Pages
 import DashboardLayout from "./components/layout/DashboardLayout";
+import LandingPage from "./pages/LandingPage"; // 1. Import LandingPage
 import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import ParentDashboard from "./pages/parent/ParentDashboard";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -11,17 +13,18 @@ import ClassesPage from "./pages/ClassesPage";
 import AssignmentsPage from "./pages/AssignmentsPage";
 import AttendancePage from "./pages/AttendancePage";
 
-const ProtectedRoutes = () => {
-	const { isAuthenticated, loading } = useAuth();
+// A wrapper for PUBLIC routes (landing, login, register).
+// If a user is already logged in, it redirects them to their dashboard.
+const PublicRoutes = () => {
+	const { isAuthenticated } = useAuth();
+	const dashboardPath = useDashboardPath();
+	return isAuthenticated ? <Navigate to={dashboardPath} replace /> : <Outlet />;
+};
 
-	if (loading) {
-		return (
-			<div className="flex h-screen items-center justify-center">
-				Loading session...
-			</div>
-		);
-	}
-
+// A wrapper for PRIVATE/PROTECTED routes.
+// If a user is not logged in, it redirects them to the login page.
+const PrivateRoutes = () => {
+	const { isAuthenticated } = useAuth();
 	return isAuthenticated ? (
 		<DashboardLayout />
 	) : (
@@ -30,14 +33,30 @@ const ProtectedRoutes = () => {
 };
 
 function App() {
-	const { user } = useAuth(); // We get the user object directly.
+	const { loading } = useAuth();
+
+	if (loading) {
+		return (
+			<div className="flex h-screen items-center justify-center bg-background">
+				Initializing KendariKids...
+			</div>
+		);
+	}
 
 	return (
 		<Routes>
-			<Route path="/login" element={<LoginPage />} />
+			{/* --- PUBLIC ROUTES --- */}
+			{/* These routes are only accessible to non-logged-in users. */}
+			<Route element={<PublicRoutes />}>
+				<Route path="/" element={<LandingPage />} />{" "}
+				{/* 2. The root is now the Landing Page */}
+				<Route path="/login" element={<LoginPage />} />
+				<Route path="/register" element={<RegisterPage />} />
+			</Route>
 
-			{/* PROTECTED ROUTES */}
-			<Route element={<ProtectedRoutes />}>
+			{/* --- PROTECTED ROUTES --- */}
+			{/* These routes are only accessible to logged-in users. */}
+			<Route element={<PrivateRoutes />}>
 				<Route path="/teacher/dashboard" element={<TeacherDashboard />} />
 				<Route path="/parent/dashboard" element={<ParentDashboard />} />
 				<Route path="/classes" element={<ClassesPage />} />
@@ -45,23 +64,7 @@ function App() {
 				<Route path="/assignments" element={<AssignmentsPage />} />
 			</Route>
 
-			{/*
-        THE NEW, ROBUST REDIRECT LOGIC
-        - The root path "/" redirects based on the user's role.
-        - This logic is safe because it runs INSIDE a component's render cycle.
-      */}
-			<Route
-				path="/"
-				element={
-					user ? (
-						<Navigate to={`/${user.role}/dashboard`} replace />
-					) : (
-						<Navigate to="/login" replace />
-					)
-				}
-			/>
-
-			{/* 404 FALLBACK */}
+			{/* 404 Fallback */}
 			<Route path="*" element={<NotFoundPage />} />
 		</Routes>
 	);

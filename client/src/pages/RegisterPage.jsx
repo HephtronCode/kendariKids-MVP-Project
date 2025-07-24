@@ -1,6 +1,8 @@
+// src/pages/RegisterPage.jsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import axios from "axios";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -14,25 +16,45 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import PublicHeader from "@/components/layout/PublicHeader";
-import heroImage from "@/assets/images/African_children_immersed_1.jpg"; // Import the image
+import heroImage from "@/assets/images/African_children_immersed_1.jpg";
 
-export default function LoginPage() {
+const API_URL = "https://kendarikids-mvp-project.onrender.com/api/auth";
+
+export default function RegisterPage() {
 	const { login } = useAuth();
 	const navigate = useNavigate();
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+	const [formData, setFormData] = useState({
+		fullName: "",
+		email: "",
+		password: "",
+	});
 	const [error, setError] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	const handleLogin = async (e) => {
+	const handleChange = (e) => {
+		const { id, value } = e.target;
+		setFormData((prev) => ({ ...prev, [id]: value }));
+	};
+
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setError("");
 		setIsSubmitting(true);
+
 		try {
-			await login(email, password);
+			await axios.post(`${API_URL}/register`, {
+				fullName: formData.fullName,
+				email: formData.email,
+				password: formData.password,
+			});
+
+			await login(formData.email, formData.password);
+
 			navigate("/", { replace: true });
 		} catch (err) {
-			setError(err.message || "Login failed");
+			setError(
+				err.response?.data?.message || "Registration failed. Please try again."
+			);
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -43,39 +65,48 @@ export default function LoginPage() {
 			className="relative flex flex-col min-h-screen items-center justify-center bg-cover bg-center"
 			style={{ backgroundImage: `url(${heroImage})` }}
 		>
-			{/* Translucent Overlay */}
 			<div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
 			<PublicHeader />
 
-			{/* The form card, with z-10 to appear on top of the overlay */}
 			<Card className="z-10 w-full max-w-sm">
 				<CardHeader>
-					<CardTitle className="text-2xl">Welcome Back!</CardTitle>
+					<CardTitle className="text-xl">Join KendariKids</CardTitle>
 					<CardDescription>
-						Enter your credentials to access your dashboard.
+						Enter your information to create a new account.
 					</CardDescription>
 				</CardHeader>
-				<form onSubmit={handleLogin}>
+				<form onSubmit={handleSubmit}>
+					{/* --- THE MISSING CODE WAS HERE --- */}
 					<CardContent className="grid gap-4">
+						<div className="grid gap-2">
+							<Label htmlFor="fullName">Full Name</Label>
+							<Input
+								id="fullName"
+								value={formData.fullName}
+								onChange={handleChange}
+								placeholder="First and Last Name"
+								required
+							/>
+						</div>
 						<div className="grid gap-2">
 							<Label htmlFor="email">Email</Label>
 							<Input
-								type="email"
 								id="email"
+								type="email"
+								value={formData.email}
+								onChange={handleChange}
 								placeholder="user@example.com"
-								value={email}
-								onChange={(e) => setEmail(e.target.value)}
 								required
 							/>
 						</div>
 						<div className="grid gap-2">
 							<Label htmlFor="password">Password</Label>
 							<Input
-								type="password"
 								id="password"
-								value={password}
-								onChange={(e) => setPassword(e.target.value)}
+								type="password"
+								value={formData.password}
+								onChange={handleChange}
 								required
 							/>
 						</div>
@@ -83,6 +114,7 @@ export default function LoginPage() {
 							<p className="text-sm font-medium text-destructive">{error}</p>
 						)}
 					</CardContent>
+					{/* --- END OF MISSING CODE --- */}
 					<CardFooter className="flex-col items-start gap-4">
 						<Button
 							type="submit"
@@ -92,12 +124,12 @@ export default function LoginPage() {
 							{isSubmitting && (
 								<Loader2 className="mr-2 h-4 w-4 animate-spin" />
 							)}
-							{isSubmitting ? "Signing In..." : "Sign In"}
+							{isSubmitting ? "Creating Account..." : "Create Account"}
 						</Button>
 						<div className="text-center text-sm w-full">
-							Don't have an account?{" "}
-							<Link to="/register" className="underline">
-								Sign up
+							Already have an account?{" "}
+							<Link to="/login" className="underline">
+								Sign in
 							</Link>
 						</div>
 					</CardFooter>
