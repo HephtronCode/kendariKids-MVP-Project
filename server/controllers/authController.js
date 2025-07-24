@@ -1,12 +1,8 @@
-// server/controllers/authController.js
-
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 
-// Generate JWT token
-const getToken = (id, role) => {
-	// Added role here
+const generateToken = (id, role) => {
 	return jwt.sign({ id, role }, process.env.JWT_SECRET, {
 		expiresIn: "30d",
 	});
@@ -16,10 +12,8 @@ const getToken = (id, role) => {
 // @route POST /api/auth/register
 // @access Public
 export const registerUser = async (req, res) => {
-	// The key is that `role` and `children` are destructured here
 	const { fullName, email, password, role, children } = req.body;
 
-	// Basic validation
 	if (!fullName || !email || !password) {
 		return res
 			.status(400)
@@ -34,14 +28,13 @@ export const registerUser = async (req, res) => {
 				.json({ message: "User with this email already exists" });
 		}
 
-		// Create a new user with the provided data
 		const user = await User.create({
 			fullName,
 			email,
 			password,
-			// If a role is provided in the body, it will be used.
-			// If not, the User schema's default ('student') will be used.
-			role: role || "student",
+			// THE NEW REQUIREMENT: If no role is provided (like from the public sign-up form),
+			// default to 'teacher' instead of 'student'.
+			role: role || "teacher",
 			children,
 		});
 
@@ -77,7 +70,7 @@ export const loginUser = async (req, res) => {
 				fullName: user.fullName,
 				email: user.email,
 				role: user.role,
-				token: getToken(user._id, user.role),
+				token: generateToken(user._id, user.role),
 			});
 		} else {
 			res.status(401).json({ message: `Invalid email or password` });
@@ -89,10 +82,9 @@ export const loginUser = async (req, res) => {
 	}
 };
 
-// @desc Get current user profile
+// @desc Get user profile
 // @route GET /api/auth/me
 // @access Private
 export const getMe = async (req, res) => {
-	// req.user is set by the protect middleware, which already fetches the user
 	res.status(200).json(req.user);
 };
