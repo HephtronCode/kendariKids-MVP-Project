@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/assignments";
+const API_URL = "https://kendarikids-mvp-project.onrender.com/api/assignments";
 
 /**
  * Fetches all assignments for the currently logged-in teacher.

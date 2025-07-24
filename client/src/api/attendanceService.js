@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_URL = "http://localhost:5000/api/attendance";
+const API_URL = "https://kendarikids-mvp-project.onrender.com/api/attendance";
 
 const markAttendance = async (attendanceData) => {
 	try {

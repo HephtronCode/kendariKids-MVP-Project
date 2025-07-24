@@ -2,7 +2,7 @@ import { createContext, useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
 // Ensure this points to your running server
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://kendarikids-mvp-project.onrender.com/api";
 
 export const AuthContext = createContext(null);
 
