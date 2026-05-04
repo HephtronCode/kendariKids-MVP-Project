@@ -58,7 +58,8 @@
   --card-foreground: oklch(0.13 0.028 261.692);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.13 0.028 261.692);
-  --primary: oklch(0.21 0.034 264.665);
+  /* Rich Vibrant Violet/Blue Primary */
+  --primary: oklch(0.45 0.25 280);
   --primary-foreground: oklch(0.985 0.002 247.839);
   --secondary: oklch(0.967 0.003 264.542);
   --secondary-foreground: oklch(0.21 0.034 264.665);
@@ -90,10 +91,11 @@
   --foreground: oklch(0.985 0.002 247.839);
   --card: oklch(0.21 0.034 264.665);
   --card-foreground: oklch(0.985 0.002 247.839);
-  --popover: oklch(0.21 0.034 264.665);
+  --popover: oklch(0.18 0.03 264);
   --popover-foreground: oklch(0.985 0.002 247.839);
-  --primary: oklch(0.928 0.006 264.531);
-  --primary-foreground: oklch(0.21 0.034 264.665);
+  /* Rich Vibrant Violet/Blue Primary for Dark Mode */
+  --primary: oklch(0.6 0.25 280);
+  --primary-foreground: oklch(0.13 0.028 261.692);
   --secondary: oklch(0.278 0.033 256.848);
   --secondary-foreground: oklch(0.985 0.002 247.839);
   --muted: oklch(0.278 0.033 256.848);
@@ -125,5 +127,25 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20 shadow-lg;
+  }
+  .glass-dark {
+    @apply bg-black/20 backdrop-blur-md border border-white/10 shadow-lg;
+  }
+  .glass-panel {
+    @apply bg-background/60 backdrop-blur-xl border border-border/50 shadow-xl;
+  }
+  
+  /* Micro-animations */
+  .hover-lift {
+    @apply transition-transform duration-300 ease-out hover:-translate-y-1 hover:shadow-xl;
+  }
+  .hover-glow {
+    @apply transition-all duration-300 ease-out hover:shadow-[0_0_15px_rgba(var(--primary),0.5)];
   }
 }
