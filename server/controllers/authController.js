@@ -1,84 +1,46 @@
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
-import User from "../models/User.js";
-
-const generateToken = (id, role) => {
-	return jwt.sign({ id, role }, process.env.JWT_SECRET, {
-		expiresIn: "30d",
-	});
-};
+import { registerUserService, loginUserService } from "../services/authService.js";
+import { sendSuccess } from "../utils/apiResponse.js";
 
 // @desc Register a new user
 // @route POST /api/auth/register
 // @access Public
-export const registerUser = async (req, res) => {
+export const registerUser = async (req, res, next) => {
 	const { fullName, email, password, role, children } = req.body;
 
 	if (!fullName || !email || !password) {
-		return res
-			.status(400)
-			.json({ message: "Please enter all required fields" });
+		res.status(400);
+		return next(new Error("Please enter all required fields"));
 	}
 
 	try {
-		const userExists = await User.findOne({ email });
-		if (userExists) {
-			return res
-				.status(400)
-				.json({ message: "User with this email already exists" });
-		}
-
-		const user = await User.create({
-			fullName,
-			email,
-			password,
-			// THE NEW REQUIREMENT: If no role is provided (like from the public sign-up form),
-			// default to 'teacher' instead of 'student'.
-			role: role || "teacher",
-			children,
-		});
-
-		if (user) {
-			res.status(201).json({
-				_id: user._id,
-				fullName: user.fullName,
-				email: user.email,
-				role: user.role,
-				token: generateToken(user._id, user.role),
-			});
-		} else {
-			res.status(400).json({ message: "Invalid user data provided" });
-		}
+		const userData = await registerUserService({ fullName, email, password, role, children });
+		sendSuccess(res, 201, "User registered successfully", userData);
 	} catch (error) {
-		console.error("Registration error:", error);
-		res.status(500).json({ message: "Server error during registration" });
+		if (error.message === "User with this email already exists" || error.message === "Invalid user data provided") {
+			res.status(400);
+		} else {
+			res.status(500);
+		}
+		next(error);
 	}
 };
 
 // @desc Authenticate user and get token
 // @route POST /api/auth/login
 // @access Public
-export const loginUser = async (req, res) => {
+export const loginUser = async (req, res, next) => {
 	const { email, password } = req.body;
 
 	try {
-		const user = await User.findOne({ email });
-
-		if (user && (await bcrypt.compare(password, user.password))) {
-			res.json({
-				_id: user._id,
-				fullName: user.fullName,
-				email: user.email,
-				role: user.role,
-				token: generateToken(user._id, user.role),
-			});
-		} else {
-			res.status(401).json({ message: `Invalid email or password` });
-		}
+		const userData = await loginUserService(email, password);
+		sendSuccess(res, 200, "Login successful", userData);
 	} catch (error) {
-		res
-			.status(500)
-			.json({ message: `Server error during login`, error: error.message });
+		if (error.message === "Invalid email or password") {
+			res.status(401);
+		} else {
+			res.status(500);
+		}
+		next(error);
 	}
 };
 

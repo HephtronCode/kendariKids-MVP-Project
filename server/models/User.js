@@ -59,6 +59,10 @@ userSchema.pre("save", async function (next) {
 	this.password = await bcrypt.hash(this.password, salt);
 });
 
+// Indexes for performance optimization
+userSchema.index({ role: 1 });
+userSchema.index({ class: 1 });
+
 // Method to compare passwords
 userSchema.methods.comparePassword = async function (candidatePassword) {
 	return await bcrypt.compare(candidatePassword, this.password);
