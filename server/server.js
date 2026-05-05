@@ -22,6 +22,7 @@ connectDB();
 const app = express();
 
 // Security Middlewares
+app.use(cors());
 app.use(helmet());
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
@@ -30,8 +31,6 @@ const limiter = rateLimit({
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
 });
 app.use("/api", limiter);
-
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

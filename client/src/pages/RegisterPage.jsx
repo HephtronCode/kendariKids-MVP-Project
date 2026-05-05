@@ -18,7 +18,7 @@ import { Loader2 } from "lucide-react";
 import PublicHeader from "@/components/layout/PublicHeader";
 import heroImage from "@/assets/images/African_children_immersed_1.jpg";
 
-const API_URL = "https://kendarikids-mvp-project.onrender.com/api/auth";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 export default function RegisterPage() {
 	const { login } = useAuth();
@@ -42,7 +42,7 @@ export default function RegisterPage() {
 		setIsSubmitting(true);
 
 		try {
-			await axios.post(`${API_URL}/register`, {
+			await axios.post(`${API_URL}/auth/register`, {
 				fullName: formData.fullName,
 				email: formData.email,
 				password: formData.password,
@@ -69,10 +69,10 @@ export default function RegisterPage() {
 
 			<PublicHeader />
 
-			<Card className="z-10 w-full max-w-sm">
+			<Card className="z-10 w-full max-w-sm glass-panel hover-glow border-white/20">
 				<CardHeader>
-					<CardTitle className="text-xl">Join KendariKids</CardTitle>
-					<CardDescription>
+					<CardTitle className="text-xl text-primary font-bold">Join KendariKids</CardTitle>
+					<CardDescription className="text-foreground/80">
 						Enter your information to create a new account.
 					</CardDescription>
 				</CardHeader>
@@ -87,6 +87,7 @@ export default function RegisterPage() {
 								onChange={handleChange}
 								placeholder="First and Last Name"
 								required
+								className="bg-background/50 border-white/20 focus:ring-primary/50"
 							/>
 						</div>
 						<div className="grid gap-2">
@@ -98,6 +99,7 @@ export default function RegisterPage() {
 								onChange={handleChange}
 								placeholder="user@example.com"
 								required
+								className="bg-background/50 border-white/20 focus:ring-primary/50"
 							/>
 						</div>
 						<div className="grid gap-2">
@@ -108,6 +110,7 @@ export default function RegisterPage() {
 								value={formData.password}
 								onChange={handleChange}
 								required
+								className="bg-background/50 border-white/20 focus:ring-primary/50"
 							/>
 						</div>
 						{error && (
@@ -118,7 +121,7 @@ export default function RegisterPage() {
 					<CardFooter className="flex-col items-start gap-4">
 						<Button
 							type="submit"
-							className="w-full mt-4"
+							className="w-full mt-4 hover-lift shadow-lg"
 							disabled={isSubmitting}
 						>
 							{isSubmitting && (
@@ -128,7 +131,7 @@ export default function RegisterPage() {
 						</Button>
 						<div className="text-center text-sm w-full">
 							Already have an account?{" "}
-							<Link to="/login" className="underline">
+							<Link to="/login" className="underline text-primary hover:text-primary/80 transition-colors">
 								Sign in
 							</Link>
 						</div>

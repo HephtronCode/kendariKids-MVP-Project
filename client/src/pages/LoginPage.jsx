@@ -49,10 +49,10 @@ export default function LoginPage() {
 			<PublicHeader />
 
 			{/* The form card, with z-10 to appear on top of the overlay */}
-			<Card className="z-10 w-full max-w-sm">
+			<Card className="z-10 w-full max-w-sm glass-panel hover-glow border-white/20">
 				<CardHeader>
-					<CardTitle className="text-2xl">Welcome Back!</CardTitle>
-					<CardDescription>
+					<CardTitle className="text-2xl text-primary font-bold">Welcome Back!</CardTitle>
+					<CardDescription className="text-foreground/80">
 						Enter your credentials to access your dashboard.
 					</CardDescription>
 				</CardHeader>
@@ -67,6 +67,7 @@ export default function LoginPage() {
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}
 								required
+								className="bg-background/50 border-white/20 focus:ring-primary/50"
 							/>
 						</div>
 						<div className="grid gap-2">
@@ -77,6 +78,7 @@ export default function LoginPage() {
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
 								required
+								className="bg-background/50 border-white/20 focus:ring-primary/50"
 							/>
 						</div>
 						{error && (
@@ -86,7 +88,7 @@ export default function LoginPage() {
 					<CardFooter className="flex-col items-start gap-4">
 						<Button
 							type="submit"
-							className="w-full mt-4"
+							className="w-full mt-4 hover-lift shadow-lg"
 							disabled={isSubmitting}
 						>
 							{isSubmitting && (
@@ -96,7 +98,7 @@ export default function LoginPage() {
 						</Button>
 						<div className="text-center text-sm w-full">
 							Don't have an account?{" "}
-							<Link to="/register" className="underline">
+							<Link to="/register" className="underline text-primary hover:text-primary/80 transition-colors">
 								Sign up
 							</Link>
 						</div>
