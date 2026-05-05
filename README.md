@@ -1,26 +1,48 @@
 # KendariKids - Modern School Management System MVP
 
-[![Vercel Deployment](https://vercel.com/button)](https://kendari-kids-mvp-project.vercel.app/)
 [![CI Status](https://github.com/HephtronCode/kendariKids-MVP-Project/actions/workflows/ci.yml/badge.svg)](https://github.com/HephtronCode/kendariKids-MVP-Project/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 The culmination of an epic development journey, **KendariKids** is the Minimum Viable Product for a modern, responsive, and user-friendly school management system designed for schools in Africa, from nursery through secondary levels.
 
-## 🚀 Live Demo
+---
 
-**Experience the deployed application live on Vercel:**
+## 🛡️ Security Architecture (VOID-BREAKER Protocol)
 
-### **[https://kendari-kids-mvp-project.vercel.app/](https://kendari-kids-mvp-project.vercel.app/)**
+The project has undergone rigorous security hardening under the **VOID-BREAKER** tactical mission, transforming the MVP into a **Sovereign-Apex** secured application.
 
-### **Demo Credentials:**
+### **System Architecture Diagram**
 
-- **Teacher Login:**
-  - Email: `mensah@kendarikids.com`
-  - Password: `password123`
+```mermaid
+graph TD
+    subgraph Client_Layer [Frontend: React & Tailwind v4]
+        UI[Glassmorphic UI] --> Auth_Provider[Auth Context / JWT Store]
+    end
 
-*(Note: The deployed demo may not yet reflect the latest local development changes, such as the new glassmorphic UI and decoupled cloud architecture.)*
+    subgraph Security_Gate [Orchestration: VOID-BREAKER Middleware]
+        Protect[JWT Verification & Rotation]
+        RBAC[Sanitized RBAC / Mass-Assignment Shield]
+    end
 
-![KendariKids Demo](./readme-assets/demo.png)
+    subgraph Core_Layer [Backend: Express & Node.js]
+        API[RESTful API Controllers] --> Services[Auth & Business Logic]
+        Services --> Validation[Mongoose Regex & Complexity Enforcer]
+    end
+
+    subgraph Data_Layer [Database: MongoDB]
+        DB[(Encrypted Document Store)]
+    end
+
+    Auth_Provider -- "HTTPS / Bearer Token" --> Security_Gate
+    Security_Gate --> API
+    Validation --> DB
+```
+
+### **Hardening Highlights**
+- **JWT Secret Rotation:** Automated rotation to high-entropy secrets with a strict **24-hour expiration** window.
+- **Role Mass-Assignment Protection:** Backend-enforced whitelisting of public roles (`teacher`, `parent`) to prevent unauthorized privilege escalation.
+- **Advanced Password Complexity:** Mongoose-level regex enforcement requiring uppercase, lowercase, numbers, and a minimum of 8 characters.
+- **Information Leakage Prevention:** Sanitized authorization error messages that do not disclose internal role structures.
 
 ---
 

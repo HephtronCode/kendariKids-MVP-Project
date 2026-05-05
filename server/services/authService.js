@@ -4,7 +4,7 @@ import User from "../models/User.js";
 
 const generateToken = (id, role) => {
 	return jwt.sign({ id, role }, process.env.JWT_SECRET, {
-		expiresIn: "30d",
+		expiresIn: "1d",
 	});
 };
 
@@ -16,11 +16,17 @@ export const registerUserService = async (userData) => {
 		throw new Error("User with this email already exists");
 	}
 
+	// Security Patch: Prevent Role Mass Assignment
+	// Only allow 'teacher' or 'parent' roles during public registration.
+	// Admin and Staff roles must be assigned via administrative tools.
+	const publicRoles = ["teacher", "parent"];
+	const assignedRole = publicRoles.includes(role) ? role : "parent";
+
 	const user = await User.create({
 		fullName,
 		email,
 		password,
-		role: role || "teacher",
+		role: assignedRole,
 		children,
 	});
 
