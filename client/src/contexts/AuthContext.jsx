@@ -1,8 +1,8 @@
 import { createContext, useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
-// Ensure this points to your running server
-const API_URL = "https://kendarikids-mvp-project.onrender.com/api";
+// Ensure this points to your running server (local or prod)
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 export const AuthContext = createContext(null);
 
@@ -43,7 +43,8 @@ export const AuthProvider = ({ children }) => {
 				email,
 				password,
 			});
-			const { token: receivedToken, ...userData } = response.data;
+			// Unwrap the standardized API response from Phase 1
+			const { token: receivedToken, ...userData } = response.data.data;
 			setUser(userData);
 			axios.defaults.headers.common[
 				"Authorization"
