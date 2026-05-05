@@ -15,7 +15,8 @@ const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const ClassesPage = lazy(() => import("./pages/ClassesPage"));
 const AssignmentsPage = lazy(() => import("./pages/AssignmentsPage"));
 const AttendancePage = lazy(() => import("./pages/AttendancePage"));
-
+const GradebooksPage = lazy(() => import("./pages/GradebooksPage"));
+const TimetablePage = lazy(() => import("./pages/TimetablePage"));
 // A wrapper for PUBLIC routes (landing, login, register).
 // If a user is already logged in, it redirects them to their dashboard.
 const PublicRoutes = () => {
@@ -70,6 +71,8 @@ function App() {
 					<Route path="/classes" element={<ClassesPage />} />
 					<Route path="/attendance" element={<AttendancePage />} />
 					<Route path="/assignments" element={<AssignmentsPage />} />
+					<Route path="/gradebooks" element={<GradebooksPage />} />
+					<Route path="/timetable" element={<TimetablePage />} />
 				</Route>
 
 				{/* 404 Fallback */}

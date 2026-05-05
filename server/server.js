@@ -11,7 +11,8 @@ import attendanceRoutes from "./routes/attendanceRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
 import assignmentRoutes from "./routes/assignmentRoutes.js"; // 1. Import it
-
+import gradebookRoutes from "./routes/gradebookRoutes.js";
+import timetableRoutes from "./routes/timetableRoutes.js";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { errorHandler, notFound } from "./middlewares/errorHandler.js";
@@ -42,7 +43,8 @@ app.use("/api/attendance", attendanceRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/assignments", assignmentRoutes); // 2. Mount it
-
+app.use("/api/gradebooks", gradebookRoutes);
+app.use("/api/timetables", timetableRoutes);
 // Error Handling Middlewares
 app.use(notFound);
 app.use(errorHandler);

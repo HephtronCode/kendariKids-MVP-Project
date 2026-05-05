@@ -10,6 +10,7 @@ import {
 	GraduationCap,
 	Gamepad2,
 	FileText,
+	Clock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useDashboardPath } from "@/hooks/useAuth";
@@ -33,6 +34,16 @@ export function NavContent() {
 			to: "/assignments",
 			icon: <PenSquare className="h-4 w-4" />,
 			text: "Assignments",
+		},
+		{
+			to: "/gradebooks",
+			icon: <BookOpen className="h-4 w-4" />,
+			text: "Gradebooks",
+		},
+		{
+			to: "/timetable",
+			icon: <Clock className="h-4 w-4" />,
+			text: "Timetable",
 		},
 	];
 

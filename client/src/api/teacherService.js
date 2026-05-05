@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://kendarikids-mvp-project.onrender.com/api/teacher";
+const API_URL = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/teacher` : "http://localhost:5000/api/teacher";
 
 const getDashboardStats = async () => {
 	try {

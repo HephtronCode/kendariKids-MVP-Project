@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://kendarikids-mvp-project.onrender.com/api/assignments";
+const API_URL = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/assignments` : "http://localhost:5000/api/assignments";
 
 /**
  * Fetches all assignments for the currently logged-in teacher.

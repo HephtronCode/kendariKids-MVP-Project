@@ -100,7 +100,7 @@ export default function AttendancePage() {
 	return (
 		<div className="space-y-6">
 			<div>
-				<h1 className="text-3xl font-bold tracking-tight">
+				<h1 className="text-3xl font-bold tracking-tight text-primary">
 					Attendance Tracking
 				</h1>
 				<p className="text-muted-foreground">
@@ -108,7 +108,7 @@ export default function AttendancePage() {
 				</p>
 			</div>
 
-			<Card>
+			<Card className="glass-panel border-white/20 hover-glow">
 				<CardHeader>
 					<CardTitle>Selection Criteria</CardTitle>
 					<CardDescription>Choose a class and date.</CardDescription>
@@ -135,7 +135,7 @@ export default function AttendancePage() {
 							<Button
 								variant={"outline"}
 								className={cn(
-									"w-full md:w-[280px] justify-start text-left font-normal",
+									"w-full md:w-[280px] justify-start text-left font-normal hover-lift",
 									!selectedDate && "text-muted-foreground"
 								)}
 							>
@@ -160,7 +160,7 @@ export default function AttendancePage() {
 			</Card>
 
 			{selectedClass && (
-				<Card>
+				<Card className="glass-panel border-white/20 hover-glow">
 					<CardHeader>
 						<CardTitle>Student Roster</CardTitle>
 						<CardDescription>
@@ -203,6 +203,7 @@ export default function AttendancePage() {
 														<Button
 															variant="outline"
 															size="sm"
+															className="hover-lift hover:text-primary hover:border-primary"
 															onClick={() =>
 																handleMarkAttendance(student._id, "Present")
 															}
@@ -212,6 +213,7 @@ export default function AttendancePage() {
 														<Button
 															variant="outline"
 															size="sm"
+															className="hover-lift hover:text-destructive hover:border-destructive"
 															onClick={() =>
 																handleMarkAttendance(student._id, "Absent")
 															}
@@ -221,6 +223,7 @@ export default function AttendancePage() {
 														<Button
 															variant="outline"
 															size="sm"
+															className="hover-lift hover:text-orange-500 hover:border-orange-500"
 															onClick={() =>
 																handleMarkAttendance(student._id, "Late")
 															}

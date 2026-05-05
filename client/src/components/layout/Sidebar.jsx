@@ -10,12 +10,13 @@ import {
 	GraduationCap,
 	Gamepad2,
 	FileText,
+	Clock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 // We now only need the main useAuth hook
 import { useAuth } from "@/hooks/useAuth";
 
-export default function Sidebar() {
+export default function Sidebar({ className }) {
 	// Get the full user object to determine the role
 	const { user } = useAuth();
 
@@ -41,6 +42,16 @@ export default function Sidebar() {
 			icon: <PenSquare className="h-4 w-4" />,
 			text: "Assignments",
 		},
+		{
+			to: "/gradebooks",
+			icon: <BookOpen className="h-4 w-4" />,
+			text: "Gradebooks",
+		},
+		{
+			to: "/timetable",
+			icon: <Clock className="h-4 w-4" />,
+			text: "Timetable",
+		},
 	];
 
 	// Placeholder links for upcoming features
@@ -53,7 +64,7 @@ export default function Sidebar() {
 	];
 
 	return (
-		<aside className="hidden w-64 flex-col border-r bg-card p-4 md:flex">
+		<aside className={cn("hidden w-64 flex-col p-4 md:flex h-full", className)}>
 			{/* The header Link component now correctly uses the calculated dashboardPath */}
 			<Link
 				to={dashboardPath}

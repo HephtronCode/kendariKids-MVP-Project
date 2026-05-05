@@ -73,7 +73,7 @@ export default function ClassesPage() {
 		<div className="space-y-6">
 			<div className="flex items-center justify-between">
 				<div>
-					<h1 className="text-3xl font-bold tracking-tight">
+					<h1 className="text-3xl font-bold tracking-tight text-primary">
 						Class Management
 					</h1>
 					<p className="text-muted-foreground">
@@ -83,7 +83,7 @@ export default function ClassesPage() {
 
 				<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 					<DialogTrigger asChild>
-						<Button>
+						<Button className="hover-lift shadow-lg">
 							<PlusCircle className="mr-2 h-4 w-4" /> Create Class
 						</Button>
 					</DialogTrigger>
@@ -129,7 +129,7 @@ export default function ClassesPage() {
 				</Dialog>
 			</div>
 
-			<div className="border rounded-lg">
+			<div className="border border-white/20 rounded-lg glass-panel overflow-hidden">
 				<Table>
 					<TableHeader>
 						<TableRow>
@@ -157,7 +157,7 @@ export default function ClassesPage() {
 									<TableCell className="font-medium">{cls.name}</TableCell>
 									<TableCell>{cls.students.length}</TableCell>
 									<TableCell className="text-right">
-										<Button variant="outline" size="sm">
+										<Button variant="outline" size="sm" className="hover-lift hover:text-primary">
 											Manage
 										</Button>
 									</TableCell>

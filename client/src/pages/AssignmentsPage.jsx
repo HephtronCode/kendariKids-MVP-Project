@@ -120,7 +120,7 @@ export default function AssignmentsPage() {
 		<div className="space-y-6">
 			<div className="flex items-center justify-between">
 				<div>
-					<h1 className="text-3xl font-bold tracking-tight">
+					<h1 className="text-3xl font-bold tracking-tight text-primary">
 						Assignment Board
 					</h1>
 					<p className="text-muted-foreground">
@@ -129,7 +129,7 @@ export default function AssignmentsPage() {
 				</div>
 				<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 					<DialogTrigger asChild>
-						<Button>
+						<Button className="hover-lift shadow-lg">
 							<PlusCircle className="mr-2 h-4 w-4" /> Create Assignment
 						</Button>
 					</DialogTrigger>
@@ -203,6 +203,7 @@ export default function AssignmentsPage() {
 								type="submit"
 								onClick={handleCreateAssignment}
 								disabled={isSubmitting}
+								className="hover-lift"
 							>
 								{isSubmitting && (
 									<Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -215,7 +216,7 @@ export default function AssignmentsPage() {
 			</div>
 
 			{/* Assignments Table */}
-			<div className="border rounded-lg">
+			<div className="border border-white/20 rounded-lg glass-panel overflow-hidden">
 				<Table>
 					<TableHeader>
 						<TableRow>
@@ -252,7 +253,7 @@ export default function AssignmentsPage() {
 										{format(new Date(assignment.dueDate), "PPP")}
 									</TableCell>
 									<TableCell className="text-right">
-										<Button variant="outline" size="sm">
+										<Button variant="outline" size="sm" className="hover-lift hover:text-primary">
 											View Submissions
 										</Button>
 									</TableCell>
